@@ -102,6 +102,22 @@ local SaveManager = {} do
                 end
             end,
         },
+        InputWithButtons = {
+            Save = function(idx, object)
+                return { type = "InputWithButtons", idx = idx, leftValue = object.LeftValue, rightValue = object.RightValue }
+            end,
+            Load = function(idx, data)
+                local object = SaveManager.Library.Options[idx]
+                if object then
+                    if object.LeftValue ~= data.leftValue and type(data.leftValue) == "string" then
+                        object:SetLeftValue(data.leftValue)
+                    end
+                    if object.RightValue ~= data.rightValue and type(data.rightValue) == "string" then
+                        object:SetRightValue(data.rightValue)
+                    end
+                end
+            end,
+        },
     }
 
     function SaveManager:SetLibrary(library)
