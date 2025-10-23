@@ -55,8 +55,9 @@ local SaveManager = {} do
             end,
             Load = function(idx, data)
                 local object = SaveManager.Library.Options[idx]
-                if object and object.Value ~= data.value then
-                    object:SetValue(data.value)
+                local numValue = tonumber(data.value)
+                if object and numValue and object.Value ~= numValue then
+                    object:SetValue(numValue)
                 end
             end,
         },
@@ -126,12 +127,11 @@ local SaveManager = {} do
 
     function SaveManager:IgnoreThemeSettings()
         self:SetIgnoreIndexes({
-            "BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", "FontFace", -- themes
-            "ThemeManager_ThemeList", "ThemeManager_CustomThemeList", "ThemeManager_CustomThemeName", -- themes
+            "BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", "FontFace", 
+            "ThemeManager_ThemeList", "ThemeManager_CustomThemeList", "ThemeManager_CustomThemeName", 
         })
     end
 
-    --// Folders \\--
     function SaveManager:CheckSubFolder(createFolder)
         if typeof(self.SubFolder) ~= "string" or self.SubFolder == "" then return false end
 
@@ -203,7 +203,6 @@ local SaveManager = {} do
         self:BuildFolderTree()
     end
 
-    --// Save, Load, Delete, Refresh \\--
     function SaveManager:Save(name)
         if (not name) then
             return false, "no config file is selected"
@@ -264,7 +263,7 @@ local SaveManager = {} do
             if not option.type then continue end
             if not self.Parser[option.type] then continue end
 
-            task.spawn(self.Parser[option.type].Load, option.idx, option) -- task.spawn() so the config loading wont get stuck.
+            task.spawn(self.Parser[option.type].Load, option.idx, option) 
         end
 
         return true
